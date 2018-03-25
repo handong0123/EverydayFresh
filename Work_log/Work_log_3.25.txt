@@ -1,0 +1,8 @@
+Weekly£º3
+Date£º3.25
+Kind£ºWeekly summary
+content£º
+1.Determine the name of the project
+2.Determining the division of labor of the members
+3.Finish feasibility analysis
+4.Upload project demo
