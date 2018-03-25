@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>添加收货地址Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        background-color: #eee;
+    }
+
+    header {
+        width: 100%;
+        height: 60px;
+        margin-bottom: 1px;
+        background-color: #fff;
+    }
+
+    header .select {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 22px;
+        left: 16px;
+        background-image: url(../image/select_off.png);
+        background-size: 100% 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    header .select-on {
+        background-image: url(../image/select_on.png);
+    }
+
+    header .text {
+        box-sizing: border-box;
+        width: 100%;
+        height: 60px;
+        padding-left: 40px;
+        line-height: 60px;
+        font-size: 20px;
+        color: #444;
+        text-align: left;
+    }
+
+    section {
+        height: auto;
+        width: 100%;
+    }
+
+    section .option {
+        position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-flex-flow: row;
+        flex-flow: row;
+        box-sizing: border-box;
+        width: 100%;
+        height: 60px;
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-bottom: 1px;
+        background-color: #fff;
+    }
+
+    section .option .name {
+        width: auto;
+        line-height: 60px;
+    }
+
+    section .option .input {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        height: 60px;
+        box-sizing: border-box;
+        padding-top: 22px;
+    }
+
+    section .option .input input {
+        font-size: 14px;
+        width: 100%;
+        height: 20px;
+        line-height: 14px;
+        vertical-align: top;
+        border: none;
+        outline: none;
+    }
+
+    section .option .select {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        height: 60px;
+        line-height: 60px;
+    }
+
+    section .option .arrow-right-highlight {
+        position: absolute;
+        right: 16px;
+        top: 22px;
+        width: 8px;
+        height: 16px;
+        line-height: 60px;
+        background-image: url(../image/item_user_address_right.png);
+        background-repeat: no-repeat;
+        background-size: 8px 16px;
+        background-position: right center;
+    }
+
+    section .option .multi-select {
+        box-sizing: border-box;
+        padding-top: 11px;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        height: 60px;
+    }
+
+    section .option .multi-select .item {
+        display: inline-block;
+        width: auto;
+        height: 30px;
+        padding: 4px 8px;
+        color: #888;
+        font-size: 18px;
+        text-align: center;
+        line-height: 30px;
+        border-radius: 19px;
+        border: 1px solid #888;
+    }
+
+    section .option .multi-select .selected {
+        color: #e3007f;
+        border: 1px solid #e3007f;
+    }
+
+    footer {
+        margin-top: 16px;
+        width: 100%;
+        height: 50px;
+    }
+
+    footer .btn {
+        margin-left: 100px;
+        margin-right: 100px;
+        height: 44px;
+        background-color: #e3007f;
+        border-radius: 22px;
+        text-align: center;
+        font-size: 18px;
+        color: #fff;
+        line-height: 44px;
+    }
+
+    .highlight {
+        opacity: 0.7;
+    }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div id="isDefault" class="select select-on" topmode onclick="fnSetDefault(true);"></div>
+        <div class="text">设为默认地址</div>
+    </header>
+    <section>
+        <div class="option">
+            <div class="name">收货人：</div>
+            <div class="input">
+                <input id="consignee" type="text" placeholder="点击输入收货人姓名">
+            </div>
+        </div>
+        <div class="option">
+            <div class="name">手机号码：</div>
+            <div class="input">
+                <input id="mobile" type="text" placeholder="点击输入收货人手机号码">
+            </div>
+        </div>
+        <div class="option" tapmode onclick="fnOpenActionSelector();">
+            <div class="name">所在区域：</div>
+            <div id="area" class="select">点击选择收货所在的区域</div>
+            <div class="arrow-right-highlight"></div>
+        </div>
+        <div class="option" tapmode onclick="fnOpenSetAddressDetailWin();">
+            <div class="name">具体地址：</div>
+            <div id="focus" class="select">点击选择具体的小区或写字楼</div>
+            <div class="arrow-right-highlight"></div>
+        </div>
+        <div class="option">
+            <div class="name">楼号门牌：</div>
+            <div class="input">
+                <input id="house" type="text" placeholder="点击输入楼号门牌（例A座3单元1201">
+            </div>
+        </div>
+        <div class="option">
+            <div class="name">地址类型：</div>
+            <div id="type" class="multi-select">
+                <div class="item selected" tapmode onclick="fnSelectAddressType(0)">公司</div>
+                <div class="item" tapmode onclick="fnSelectAddressType(1)">住宅</div>
+                <div class="item" tapmode onclick="fnSelectAddressType(2)">学校</div>
+                <div class="item" tapmode onclick="fnSelectAddressType(3)">其它</div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="btn" tapmode onclick="fnSave();">保存</div>
+    </footer>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    init();
+};
+
+var addressInfo = {
+    isDefault: true,
+    type: 0
+};
+var consignee, mobile, area, focus, house;
+
+function init() {
+    consignee = $api.byId('consignee');
+    mobile = $api.byId('mobile');
+    area = $api.byId('area');
+    focus = $api.byId('focus');
+    house = $api.byId('house');
+
+    if (api.pageParam.id) {
+        addressInfo.isDefault = api.pageParam.isDefault;
+        fnSetDefault(false);
+        addressInfo.type = api.pageParam.type;
+        fnSelectAddressType(addressInfo.type);
+        consignee.value = api.pageParam.name;
+        mobile.value = api.pageParam.mobile;
+        area.innerHTML = api.pageParam.region;
+        focus.innerHTML = api.pageParam.address;
+        house.value = api.pageParam.house;
+    }
+}
+
+function fnOpenActionSelector() {
+    mobile.blur();
+    consignee.blur();
+    var UIActionSelector = api.require('UIActionSelector');
+    UIActionSelector.open({
+        datas: 'widget://res/city.json',
+        layout: {
+            row: 5,
+            col: 3,
+            height: 30,
+            size: 12,
+            sizeActive: 14,
+            rowSpacing: 5,
+            colSpacing: 10,
+            maskBg: 'rgba(0,0,0,0.2)',
+            bg: '#fff',
+            color: '#888',
+            colorActive: '#f00',
+            colorSelected: '#f00'
+        },
+        animation: true,
+        cancel: {
+            text: '取消',
+            size: 12,
+            w: 90,
+            h: 35,
+            bg: '#fff',
+            bgActive: '#ccc',
+            color: '#888',
+            colorActive: '#fff'
+        },
+        ok: {
+            text: '确定',
+            size: 12,
+            w: 90,
+            h: 35,
+            bg: '#fff',
+            bgActive: '#ccc',
+            color: '#888',
+            colorActive: '#fff'
+        },
+        title: {
+            text: '请选择',
+            size: 12,
+            h: 44,
+            bg: '#eee',
+            color: '#888'
+        },
+        fixedOn: api.frameName
+    }, function(ret, err) {
+        if (ret) {
+            var area = $api.byId('area');
+            area.innerHTML = ret.level1 + ret.level2 + (ret.level3 ? ret.level3 : '');
+        } else {
+            alert(JSON.stringify(err));
+        }
+    });
+}
+
+function fnOpenSetAddressDetailWin() {
+    api.openWin({
+        name: 'setaddressdetail',
+        url: './setaddressdetail.html',
+        pageParam: {
+            name: 'test'
+        }
+    });
+}
+
+// 被setaddressdetail_frame中调用
+function setAddressDetail(address_) {
+    var focus = $api.byId('focus');
+    $api.html(focus, address_);
+}
+
+function fnSelectAddressType(index_) {
+    var type = $api.byId('type');
+    var typeItems = $api.domAll(type, '.item');
+    addressInfo.type = index_;
+    for (var i = 0; i < typeItems.length; i++) {
+        if (i == index_) {
+            $api.addCls(typeItems[i], 'selected');
+        } else {
+            $api.removeCls(typeItems[i], 'selected');
+        }
+    }
+}
+
+function fnSetDefault(reverse_) {
+    if (reverse_) {
+        addressInfo.isDefault = !addressInfo.isDefault;
+    }
+    if (addressInfo.isDefault) {
+        $api.addCls(isDefault, 'select-on');
+    } else {
+        $api.removeCls(isDefault, 'select-on');
+    }
+}
+
+function fnSave() {
+    var userInfo = $api.getStorage('userInfo');
+
+    addressInfo.name = consignee.value;
+    addressInfo.mobile = mobile.value;
+    addressInfo.region = area.innerHTML;
+    addressInfo.address = focus.innerHTML;
+    addressInfo.house = house.value;
+    addressInfo.user = userInfo.userId;
+
+    if (api.pageParam.id) {
+        api.ajax({
+            url: 'https://d.apicloud.com/mcm/api/address/' + api.pageParam.id,
+            method: 'put',
+            headers: {
+                "X-APICloud-AppId": "A6921544633372",
+                "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+                "Authorization": userInfo.id
+            },
+            data: {
+                values: addressInfo
+            },
+            timeout: 30
+        }, function(ret, err) {
+            if (ret) {
+                api.sendEvent({
+                    name: 'updateAddress'
+                });
+                api.closeWin();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    } else {
+        api.ajax({
+            url: 'https://d.apicloud.com/mcm/api/address',
+            method: 'post',
+            headers: {
+                "X-APICloud-AppId": "A6921544633372",
+                "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+                "Authorization": userInfo.id
+            },
+            data: {
+                values: addressInfo
+            },
+            timeout: 30
+        }, function(ret, err) {
+            if (ret) {
+                api.sendEvent({
+                    name: 'updateAddress'
+                });
+                api.closeWin();
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+}
+</script>
+
+</html>

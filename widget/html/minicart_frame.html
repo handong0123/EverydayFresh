@@ -1,0 +1,171 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>mini购物车</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+    html,
+    body {
+        height: 100%;
+        background-color: transparent;
+    }
+
+    section {
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 4px;
+        width: auto;
+        height: 33px;
+        min-width: 35px;
+        line-height: 25px;
+        color: #fff;
+        font-size: 12px;
+        background-image: url(../image/minicart.png);
+        background-repeat: no-repeat;
+        background-size: auto 33px;
+        background-position: right center;
+    }
+
+    .count {
+        display: none;
+        box-sizing: border-box;
+        padding-left: 4px;
+        padding-right: 4px;
+        width: auto;
+        min-width: 25px;
+        height: 25px;
+        border-radius: 13px;
+        background-color: #fff;
+        text-align: center;
+        color: #e3007f;
+    }
+    </style>
+</head>
+
+<body>
+    <section>
+        <span class="prefix">￥</span>
+        <span id="amount" class="amount">0</span>
+        <span id="count" class="count"></span>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/db.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    initEventListenner();
+    getWareListFromDB();
+};
+
+// 初始化事件监听
+function initEventListenner() {
+    // 监听tap事件，打开购物车Window
+    api.addEventListener({
+        name: 'tap'
+    }, function(ret, err) {
+        fnOpenShoppingCartWin();
+    });
+
+    // 监听updateShoppingCart事件（自定义），更新商品数量和总金额
+    api.addEventListener({
+        name: 'updateShoppingCart'
+    }, function(ret, err) {
+        if (ret) {
+            var result = $db.select(ret.value.wareId);
+            if (result && result.data.length > 0) {
+                $db.update(ret.value.wareId, ret.value.wareCount);
+            } else {
+                $db.insert(ret.value.wareId, ret.value.wareCount);
+            }
+            getWareListFromDB();
+        } else {
+            alert(JSON.stringify(err));
+        }
+    });
+}
+
+// 打开购物车Window
+function fnOpenShoppingCartWin() {
+    api.openWin({
+        name: 'shoppingcart',
+        url: './shoppingcart.html',
+        delay: 150
+    });
+}
+
+// 获取购物车中的商品列表
+function getWareListFromDB() {
+    var ret = $db.select();
+    if (ret && ret.data.length > 0) {
+        fnGetWareList(ret.data);
+    }
+}
+
+// 获取购物车中的商品详细信息，如当前价格
+function fnGetWareList(wareList_) {
+    var now = Date.now();
+    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
+    var wares = [];
+    for (var i=0; i<wareList_.length; i++) {
+        // 不包括数量为0的商品
+        if (wareList_[i].wareCount != 0) {
+            wares.push(wareList_[i].wareId);
+        }
+    }
+    var params = {
+        fields: {},
+        where: {
+            id: {
+                inq: wares
+            }
+        },
+        skip: 0,
+        limit: wares.length
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/ware?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6075373169499",
+            "X-APICloud-AppKey": appKey
+        }
+    }, function(ret, err) {
+        if (ret) {
+            for (var i=0; i<ret.length; i++) {
+                for (var j=0; j<wareList_.length; j++) {
+                    if (ret[i].id == wareList_[j].wareId) {
+                        ret[i].wareCount = wareList_[j].wareCount;
+                    }
+                }
+            }
+            fnGetShoppingCartAmount(ret);
+        } else {
+            //alert(JSON.stringify(err));
+        }
+    });
+}
+
+// 计算并展示购物车中的商品总数和总金额
+function fnGetShoppingCartAmount (data_) {
+    var amountValue = 0;
+    var countValue = 0;
+    for (var i=0; i<data_.length; i++) {
+        countValue += parseInt(data_[i].wareCount);
+        amountValue += parseFloat(data_[i].price) * parseInt(data_[i].wareCount);
+    }
+    amountValue = Math.round(amountValue * 10)/10;
+    var amount = $api.byId('amount');
+    amount.innerHTML = amountValue;
+    var count = $api.byId('count');
+    count.style.display = (countValue > 0) ? 'inline' : 'none';
+    count.innerHTML = countValue;
+}
+</script>
+
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>商品详情Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+    html,
+    body {
+        height: 100%;
+        min-height: 100%;
+    }
+
+    section {
+        height: 100%;
+    }
+
+    .info-name {
+        box-sizing: border-box;
+        width: 100%;
+        height: 61px;
+        padding-top: 8px;
+        padding-left: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .info-name .name {
+        width: 100%;
+        height: 24px;
+        line-height: 24px;
+        color: #444;
+        font-size: 18px;
+    }
+
+    .info-name .description {
+        width: 100% height: 20px;
+        line-height: 20px;
+        color: #888;
+        font-size: 14px;
+    }
+
+    .info-price {
+        box-sizing: border-box;
+        width: 100%;
+        height: 61px;
+        padding-top: 8px;
+        padding-left: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .info-price .price {
+        width: 100%;
+        height: 24px;
+        line-height: 24px;
+        color: #e3007f;
+        font-size: 24px;
+        font-weight: bolder;
+    }
+
+    .info-price .other {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-flex-flow: row;
+        flex-flow: row;
+        width: 100%;
+        height: 20px;
+    }
+
+    .info-price .other div {
+        width: 100%;
+        height: 20px;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        line-height: 20px;
+        font-size: 14px;
+        color: #888;
+    }
+
+    .info-price .other .origin-price {
+        box-sizing: border-box;
+        padding-left: 8px;
+        text-align: left;
+    }
+
+    .info-price .other .unit {
+        box-sizing: border-box;
+        text-align: center;
+    }
+
+    .info-price .other .place {
+        box-sizing: border-box;
+        padding-right: 16px;
+        text-align: right;
+    }
+
+    .info-discount {
+        box-sizing: border-box;
+        width: 100%;
+        height: 34px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .info-discount .name {
+        display: inline-block;
+        width: auto;
+        height: 15px;
+        margin-top: 8px;
+        margin-left: 8px;
+        color: #444;
+    }
+
+    .info-discount .value {
+        display: inline-block;
+        width: auto;
+        height: 15px;
+        line-height: 15px;
+        margin-top: 3px;
+        padding: 4px;
+        border-radius: 15px;
+        box-shadow: 0 1px 1px 1px #eee;
+        color: #fff;
+        background-color: #e3007f;
+    }
+
+    .push {
+        position: relative;
+        box-sizing: border-box;
+        padding-top: 8px;
+        width: 100%;
+        height: 60px;
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .push .top {
+        height: 24px;
+        line-height: 24px;
+    }
+
+    .push .bottom {
+        height: 20px;
+        line-height: 20px;
+    }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div id="picture" class="picture"></div>
+        <div class="info-name">
+            <div id="wareName" class="name">佳沛绿奇异果</div>
+            <div id="description" class="description">享受清爽汁水融入齿间感觉</div>
+        </div>
+        <div class="info-price">
+            <div id="price" class="price">¥18.9</div>
+            <div class="other">
+                <div class="origin-price">
+                    <del id="originPrice">原价：¥99.8</del>
+                </div>
+                <div id="unit" class="unit">规格：4件</div>
+                <div id="detail" class="place">产地：中国</div>
+            </div>
+        </div>
+        <div class="info-discount">
+            <div class="name">优惠活动：</div>
+            <div class="value">全场满49元包邮</div>
+        </div>
+        <div class="push">
+            <div class="top">“亚当和夏娃都无法抵挡的禁果诱惑”</div>
+           <!--<div class="bottom"><a href="http://we.taagoo.com/scenes/4016.html"class="button">点击进入VR</a></div>-->
+            <div class="info-discount" tapmode onclick="fnOpenVRFrame();">
+              <div class="value">点击进入VR</div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    // 初始化轮播图模块
+    initUIScrollPicture();
+
+    // 获取商品详情数据
+    getWareInfo(api.pageParam.wareId);
+};
+
+var UIScrollPicture;
+
+function initUIScrollPicture() {
+
+    // 获取占位的div元素，并设置元素的宽高
+    var picture = $api.byId('picture');
+    picture.style.width = api.winWidth + 'px';
+    picture.style.height = api.winWidth + 'px';
+    var rect = $api.offset(picture);
+
+    // 引入UIScrollPicture模块，并指定位置和宽高
+    UIScrollPicture = api.require('UIScrollPicture');
+    UIScrollPicture.open({
+        rect: {
+            x: rect.l,
+            y: rect.t,
+            w: rect.w,
+            h: rect.h
+        },
+        data: {
+            paths: [
+                'widget://image/default_rect.png',
+                'widget://image/default_rect.png'
+            ]
+        },
+        styles: {
+            caption: {
+                height: 35,
+                color: '#E0FFFF',
+                size: 13,
+                bgColor: '#696969',
+                position: 'bottom'
+            },
+            indicator: {
+                align: 'center',
+                color: '#FFFFFF',
+                activeColor: '#DA70D6'
+            }
+        },
+        placeholderImg: 'widget://image/default_rect.png',
+        contentMode: 'scaleToFill',
+        interval: 5,
+        fixedOn: api.frameName,
+        loop: true,
+        fixed: false
+    }, function(ret, err) {
+        if (ret) {
+            //alert(JSON.stringify(ret));
+        } else {
+            alert(JSON.stringify(err));
+        }
+    });
+}
+
+
+function getWareInfo(wareId_) {
+    var now = Date.now();
+    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
+    api.showProgress({
+        style: 'default',
+        animationType: 'fade',
+        title: '努力加载中...',
+        text: '先喝杯茶...',
+        modal: false
+    });
+    var params = {
+        fields: {},
+        where: {
+            id: wareId_
+        },
+        skip: 0,
+        limit: 1,
+        include: ['wareInfoPointer']
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/ware?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6075373169499",
+            "X-APICloud-AppKey": appKey
+        }
+    }, function(ret, err) {
+        if (ret) {
+            api.hideProgress();
+            // 更新商品详情展示
+            fnUpdateWareInfo(ret[0]);
+        } else {
+            alert(JSON.stringify(err));
+        }
+    });
+}
+
+// 更新商品详情展示
+function fnUpdateWareInfo(ware_) {
+
+    // 商品名称
+    var wareName = $api.byId('wareName');
+    wareName.innerHTML = ware_.name;
+
+    // 商品描述
+    var description = $api.byId('description');
+    description.innerHTML = ware_.description;
+
+    // 商品价格
+    var price = $api.byId('price');
+    price.innerHTML = '￥' + ware_.price;
+
+    // 商品原价
+    var originPrice = $api.byId('originPrice');
+    originPrice.innerHTML = '原价：￥' + ware_.originPrice;
+
+    // 商品规格
+    var unit = $api.byId('unit');
+    unit.innerHTML = '规格：' + ware_.unit;
+
+    // 商品产地
+    var detail = $api.byId('detail');
+    detail.innerHTML = '产地：' + ware_.wareInfo.detail;
+
+
+    // 更新轮播图中的图片
+    var paths = [];
+    for (var i = 0; i < 6; i++) {
+        if (ware_.wareInfo['picture' + i]) {
+            paths.push(ware_.wareInfo['picture' + i].url);
+        }
+    }
+    UIScrollPicture.reloadData({
+        data: {
+            paths: paths
+        }
+    });
+}
+
+//打开VR
+function fnOpenVRFrame(){
+        api.openWin({
+            name: 'VR',
+            url: 'http://we.taagoo.com/scenes/4016.html',
+        });
+    }
+</script>
+
+</html>

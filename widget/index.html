@@ -1,89 +1,184 @@
-  <!doctype html>
+<!doctype html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>Hello app</title>
+    <title>Root Window</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
     <style type="text/css">
-        html,
-        body {
-            height: 100%;
-        }
 
-        .wrap {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-flex-flow: column;
-        }
-
-        header {
-            height: 44px;
-            width: 100%;
-            text-align: center;
-            background-color: #81a9c3;
-            color: #fff;
-            line-height: 44px;
-            font-size: 20px;
-        }
-
-        .flex-1 {
-            -webkit-box-flex: 1;
-            -webkit-flex: 1;
-        }
-
-        footer {
-            height: 30px;
-            width: 100%;
-            background-color: #81a9c3;
-            color: white;
-            line-height: 30px;
-            text-align: center;
-        }
     </style>
 </head>
 
-<body class="wrap">
-    <header>APICloud</header>
-    <section class="flex-1">
-
-    </section>
-    <footer>Copyright &copy;<span id="year"></span></footer>
+<body>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/db.js"></script>
+<script type="text/javascript" src="./script/SHA1.js"></script>
 <script type="text/javascript">
-    apiready = function() {
-        //输出Log，Log将显示在APICloud Studio控制台
-        console.log("Hello World! Hello APICloud!");
+apiready = function() {
 
-        var header = $api.dom('header'); // 获取 header 标签元素
-        var footer = $api.dom('footer'); // 获取 footer 标签元素
+    // 初始化商品分类列表
+    initWareTypeList();
 
-        // 1.修复开启沉浸式效果带来的顶部Header与手机状态栏重合的问题，最新api.js方法已支持适配iPhoneX；
-        // 2.默认已开启了沉浸式效果 config.xml中 <preference name="statusBarAppearance" value="true"/>
-        // 3.沉浸式效果适配支持iOS7+，Android4.4+以上版本
-        var headerH = $api.fixStatusBar(header);
-        // 最新api.js为了适配iPhoneX增加的方法，修复底部Footer部分与iPhoneX的底部虚拟横条键重叠的问题；
-        var footerH = $api.fixTabBar(footer);
+    // 初始化本地数据库及应用需要的相关表结构
+    initDatabase();
 
-        api.openFrame({
-            name: 'main',
-            url: 'html/main.html',
-            bounces: true,
-            rect: { // 推荐使用Margin布局，用于适配屏幕的动态变化
-                marginTop: headerH, // main页面距离win顶部的高度
-                marginBottom: footerH, // main页面距离win底部的高度
-                w: 'auto' // main页面的宽度 自适应屏幕宽度
+    // 初始化第三方推送模块，个推
+    initPushGeTui();
+
+    // 1. 根据UI架构设计（ui-architecture.xmind），打开首页Window
+    // 2. 由于是次Window是首页窗口，通过设置参数slidBackEnabled，关闭iOS默认回划关闭窗口的功能
+    api.openWin({
+        name: 'main',
+        url: './html/main.html',
+        slidBackEnabled: false
+    });
+};
+
+// 初始化商品分类列表
+function initWareTypeList() {
+
+    // 获取上一次的商品分类列表
+    var wareTypeList = $api.getStorage('wareTypeList');
+
+    // 如果没有商品分类列表，则使用默认的商品分类列表
+    if (!wareTypeList) {
+        wareTypeList = [{
+            "id": "56c80da883af652643474b6b",
+            "name": "水果",
+            "banner": {
+                "url": "http://7y0hol.com1.z0.glb.clouddn.com/apicloud/f761997f8fd33af25af5354737e37bcc.png",
+                "id": "57f63bdf0d3febfe58585568"
             }
-        });
+        }, {
+            "id": "56c80db78d04c83d3d1dedea",
+            "name": "食材",
+            "banner": {
+                "url": "http://7y0hol.com1.z0.glb.clouddn.com/apicloud/be93f9fdeda576ad81d0c728528cef50.png",
+                "id": "57f63be70d3febfe5858556c"
+            }
+        }, {
+            "id": "56c80dc031da9e480de1cb49",
+            "name": "零食",
+            "banner": {
+                "url": "http://7y0hol.com1.z0.glb.clouddn.com/apicloud/be93f9fdeda576ad81d0c728528cef50.png",
+                "id": "57f63bec9592b3fc6a341b59"
+            }
+        }, {
+            "id": "56c80dc383af652643474b6d",
+            "name": "牛奶",
+            "banner": {
+                "url": "http://7y0hol.com1.z0.glb.clouddn.com/apicloud/f761997f8fd33af25af5354737e37bcc.png",
+                "id": "57f63bf0c6f05d0956108828"
+            }
+        }, {
+            "id": "56c80dc88d04c83d3d1dedf3",
+            "name": "蔬菜",
+            "banner": {
+                "url": "http://7y0hol.com1.z0.glb.clouddn.com/apicloud/be93f9fdeda576ad81d0c728528cef50.png",
+                "id": "57f63bf39592b3fc6a341b5d"
+            }
+        }];
+    }
 
-        // 获取当前年份时间，并加载显示到页面
-        var year = $api.byId('year');
-        year.innerHTML = new Date().getFullYear();
-    };
+    // 从服务器端更新商品分类列表
+    fnGetWareTypeList();
+}
 
+// 从服务器端更新商品分类列表
+function fnGetWareTypeList() {
+    var now = Date.now();
+    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
+    var params = {
+        fields: {
+            createdAt: false,
+            updatedAt: false
+        },
+        where: {},
+        skip: 0,
+        limit: 5
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/wareType?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6075373169499",
+            "X-APICloud-AppKey": appKey
+        }
+    }, function(ret, err) {
+        if (ret) {
+            // 存储商品分类列表到本地
+            $api.setStorage('wareTypeList', ret);
+        } else {
+            api.toast({
+                msg: '更新商品分类列表失败',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    });
+}
+
+// 初始化本地数据库及应用需要的相关表结构
+function initDatabase() {
+    $db.open();
+}
+
+// 初始化第三方推送模块，个推
+function initPushGeTui() {
+
+    var pushGeTui = api.require('pushGeTui');
+
+    // 注册设备和应用信息到个推
+    pushGeTui.initialize(function(ret) {
+        var value = "";
+
+        // 区分通知和消息
+        switch (ret.type) {
+            // 返回个推平台上的ID
+            case 'cid':
+                value = 'cid:' + ret.cid;
+                break;
+            // 返回消息内容
+            case 'payload':
+                value = 'payload:' + ret.payload;
+                // 解析消息体
+                fnParsePayLoad(ret.payload);
+                break;
+            case 'occurError':
+                value = 'occurError';
+                break;
+            default:
+                break;
+        }
+    });
+}
+
+// 解析消息体，并根据约定好的消息类型，完成相关操作
+function fnParsePayLoad(payload_) {
+
+    // 消息内容为JSON格式字符串
+    var payload = $api.strToJson(payload_);
+    switch (payload.type) {
+        // 1. 推送的是商品打折消息，点击消息可以打开商品详情Window，并通过参数传递商品ID
+        // 2. Window名称根据UI架构设计（ui-architecture.xmind）来指定
+        case 'ware':
+            api.openWin({
+                name: 'ware',
+                url: './html/ware.html',
+                pageParam: {
+                    wareId: payload.wareId
+                }
+            });
+            break;
+        default:
+            break;
+    }
+}
 </script>
 
 </html>

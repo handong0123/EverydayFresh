@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>城市选择Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+    html,
+    body {
+        height: 100%;
+        background-color: transparent;
+    }
+
+    header {
+        width: 100%;
+        height: 96px;
+    }
+
+    header .title {
+        box-sizing: border-box;
+        width: auto;
+        height: 96px;
+        margin: 0 32px;
+        padding-top: 64px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #c8026f;
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    section {
+        width: 100%;
+        height: auto;
+    }
+
+    .city {
+        width: 100%;
+        height: 55px;
+        line-height: 55px;
+        text-align: center;
+        font-size: 22px;
+        color: #fff;
+    }
+
+    .highlight {
+        opacity: 0.7;
+    }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="title">选择所需服务的地区</div>
+    </header>
+    <section id="list">
+        <!--         <div class="city" tapmode onclick="api.closeFrame();">北京</div>
+        <div class="city">天津</div>
+        <div class="city">西安</div> -->
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    fnGetCityList();
+};
+
+var cityList;
+
+function fnGetCityList() {
+    var now = Date.now();
+    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
+    var params = {
+        fields: {
+            createdAt: false,
+            updatedAt: false
+        },
+        where: {},
+        skip: 0,
+        limit: 50
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/supportArea?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6075373169499",
+            "X-APICloud-AppKey": appKey
+        }
+    }, function(ret, err) {
+        if (ret) {
+            //console.log($api.jsonToStr(ret));
+            cityList = ret;
+            fnUpdateCityList(ret);
+        } else {
+            alert(JSON.stringify(err));
+        }
+    });
+}
+
+function fnUpdateCityList(data_) {
+    var list = $api.byId('list');
+    var html = '';
+    for (var i = 0; i < data_.length; i++) {
+        if (data_[i].name) {
+            html += '<div class="city" tapmode onclick="fnSelectCity(' + i + ');">' + data_[i].name + '</div>';
+        }
+    }
+    $api.html(list, html);
+}
+
+function fnSelectCity(index_) {
+    $api.setStorage('currentCity', cityList[index_]);
+    api.sendEvent({
+        name: 'cityChange',
+        extra: {
+            currentCity: cityList[index_]
+        }
+    });
+    api.setFrameAttr({
+        hidden: true
+    });
+}
+</script>
+
+</html>

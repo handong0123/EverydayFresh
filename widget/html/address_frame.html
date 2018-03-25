@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>收货地址Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+    html {
+        height: 100%;
+    }
+
+    body {
+        min-height: 100%;
+        background-color: #f0f0f0;
+    }
+
+    .list {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .list .address {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        height: auto;
+        margin-bottom: 1px;
+        padding: 8px 16px;
+        background-color: #fff;
+    }
+
+    .list .address .icon {
+        position: absolute;
+        top: 21px;
+        left: 16px;
+        width: 19px;
+        height: 24px;
+        background-image: url(../image/icon_address.png);
+        background-repeat: no-repeat;
+        background-size: auto 20px;
+        background-position: center center;
+    }
+
+    .list .address .sign {
+        display: none;
+        position: absolute;
+        top: 45px;
+        left: 8px;
+        width: 35px;
+        height: 14px;
+        line-height: 14px;
+        font-size: 12px;
+        color: #444;
+        text-align: center;
+    }
+
+    .list .address .sign-1 {
+        display: block;
+    }
+
+    .list .address .info {
+        position: relative;
+        box-sizing: border-box;
+        padding-left: 36px;
+        padding-right: 28px;
+        width: 100%;
+        height: auto;
+    }
+
+    .list .address .info .top {
+        position: relative;
+        box-sizing: border-box;
+        width: 100%;
+        height: 32px;
+        color: #444;
+        line-height: 32px;
+        font-size: 14px;
+    }
+
+    .list .address .info .top .consignee {
+        display: inline;
+        width: auto;
+    }
+
+    .list .address .info .top .mobile {
+        display: inline;
+        width: auto;
+        margin-left: 16px;
+    }
+
+    .list .address .info .bottom {
+        position: relative;
+        width: 100%;
+        min-height: 32px;
+        line-height: 32px;
+        color: #888;
+        font-size: 14px;
+    }
+
+    .list .address .info .bottom .type {
+        display: inline;
+        width: auto;
+        color: #e3007f;
+        font-weight: bolder;
+    }
+
+    .list .address .info .bottom .text {
+        display: inline;
+        width: auto;
+    }
+
+    .list .address .arrow {
+        position: absolute;
+        right: 16px;
+        top: 32px;
+        width: 8px;
+        height: 16px;
+        background-image: url(../image/item_user_address_right.png);
+        background-repeat: no-repeat;
+        background-size: 8px 16px;
+        background-position: right center;
+    }
+
+    .empty {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        background-image: url(../image/address_empty.png);
+        background-repeat: no-repeat;
+        background-size: auto 93px;
+        background-position: center 50px;
+    }
+
+    .highlight {
+        opacity: 0.7;
+    }
+    </style>
+</head>
+
+<body>
+    <section id="list" class="list">
+<!--         <div class="address">
+            <div class="icon"></div>
+            <div class="sign">[默认]</div>
+            <div class="info">
+                <div class="top">
+                    <div class="consignee">收货人：李小潞</div>
+                    <div class="mobile">13888888888</div>
+                </div>
+                <div class="bottom">
+                    <div class="type">[家庭]</div>
+                    <div class="text">北京市海淀区</div>
+                </div>
+            </div>
+            <div class="arrow"></div>
+        </div> -->
+    </section>
+    <section id="empty" class="empty"></section>
+</body>
+<script type="text/template" id="template">
+    {{~it:value:index}}
+    <div class="address" tapmode onclick="fnOpenSetAddressWin('{{=index}}');">
+        <div class="icon"></div>
+        {{?value.isDefault == true}}
+        <div class="sign sign-1">[默认]</div>
+        {{??}}
+        <div class="sign">[默认]</div>
+        {{?}}
+        <div class="info">
+            <div class="top">
+                <div class="consignee">收货人：{{=value.name}}</div>
+                <div class="mobile">{{=value.mobile}}</div>
+            </div>
+            <div class="bottom">
+                <div class="type">[{{=types[parseInt(value.type)]}}]</div>
+                <div class="text">{{=value.address}}</div>
+            </div>
+        </div>
+        <div class="arrow"></div>
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    initEventListener();
+    getAddressList();
+};
+
+var types = ['公司', '住宅', '学校', '其它'];
+var data;
+
+function getAddressList() {
+    var userInfo = $api.getStorage('userInfo');
+    api.showProgress({
+        style: 'default',
+        animationType: 'fade',
+        title: '努力加载中...',
+        text: '请稍后...',
+        modal: false
+    });
+    var params = {
+        fields: {},
+        where: {
+            user: userInfo.userId
+        },
+        skip: 0,
+        limit: 20
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/address?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6921544633372",
+            "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+            "Authorization": userInfo.id
+        }
+    }, function(ret, err) {
+        if (ret && ret.length > 0) {
+            data = ret;
+            // 在界面中更新收货地址列表显示
+            fnUpdateAddressList(ret);
+            fnShowAddressList(true);
+        } else {
+            fnShowAddressList(false);
+        }
+
+        // 隐藏加载状态对话框
+        api.hideProgress();
+    });
+}
+
+function initEventListener() {
+    api.addEventListener({
+        name: 'updateAddress'
+    }, function(ret, err) {
+        getAddressList();
+    });
+}
+
+function fnUpdateAddressList(data_) {
+    var list = $api.byId('list');
+
+    // 编译模板函数
+    var tempFn = doT.template($api.byId('template').innerHTML);
+
+    // 使用模板函数生成HTML文本
+    var resultHTML = tempFn(data_);
+    $api.html(list, resultHTML);
+    api.parseTapmode();
+}
+
+// 显示商品列表
+function fnShowAddressList(show_) {
+    var empty = $api.byId('empty');
+    var list = $api.byId('list');
+    if (show_) {
+        empty.style.display = 'none';
+        list.style.display = 'block';
+    } else {
+        empty.style.display = 'block';
+        list.style.display = 'none';
+    }
+}
+
+function fnOpenSetAddressWin(index_) {
+    api.openWin({
+        name: 'setaddress',
+        url: './setaddress.html',
+        pageParam: data[index_]
+    });
+}
+</script>
+
+</html>

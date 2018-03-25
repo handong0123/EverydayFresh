@@ -5,67 +5,398 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
     <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
-    <title>Hello APP</title>
+    <title>首页Window</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <style>
-        label {
-            margin: 10px;
-            font-size: 24px;
-        }
+    header {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background-color: #e1017e;
+    }
 
-        ul {
-            margin-bottom: 10px;
-        }
+    header .left {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100px;
+        height: 50px;
+    }
 
-        ul li {
-            margin: 5px 10px;
-            padding: 5px;
-            color: #000;
-            word-wrap: break-word;
-        }
+    header .left .arrow {
+        position: absolute;
+        bottom: 21px;
+        left: 11px;
+        width: 13px;
+        height: 8px;
+        background: url(../image/arrow_down.png);
+        background-size: 13px 8px;
+        background-position: center center;
+        background-repeat: no-repeat;
+        -webkit-transition: 200ms;
+        transition: 200ms;
+    }
+
+    header .left .arrow.active {
+        -webkit-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+
+    header .left .city {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 50px;
+        padding-left: 27px;
+        box-sizing: border-box;
+        line-height: 50px;
+        font-size: 14px;
+        color: #fff;
+        text-align: left;
+    }
+
+    header .center {
+        position: relative;
+        width: 100%;
+        height: 50px;
+        background: url(../image/home_title.png);
+        background-size: 74px 19px;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    header .right {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 40px;
+        height: 50px;
+        background: url(../image/home_membercenter.png);
+        background-size: 30px 30px;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+
+    nav {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-flex-flow: row;
+        flex-flow: row;
+        position: relative;
+        width: 100%;
+        height: 40px;
+        background-color: #e1017e;
+    }
+
+    nav .menu {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        font-size: 13px;
+        color: #f973b8;
+        text-align: center;
+    }
+
+    nav .menu.selected {
+        font-size: 14px;
+        color: #fff;
+        font-weight: bolder;
+    }
     </style>
 </head>
 
 <body>
-    <label>Hello APP</label>
-    <div id='sys-info'></div>
+    <header id="header">
+        <div class="left" tapmode onclick="fnOpenCitySelectorFrame();">
+            <div class="arrow" id="arrow"></div>
+            <div class="city" id="city">浙江省</div>
+        </div>
+        <div class="center"></div>
+        <div class="right" tapmode onclick="fnOpenPersonalCenterWin();"></div>
+    </header>
+    <nav id="nav">
+        <div class="menu selected" tapmode="selected" onclick="fnSetNavMenuIndex(0);">水果</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(1);">肉类</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(2);">禽蛋</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(3);">海产</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(4);">蔬菜</div>
+    </nav>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
-    apiready = function() {
-        var ver = api.version;
-        var sType = api.systemType;
-        var sVer = api.systemVersion;
-        var id = api.deviceId;
-        var model = api.deviceModel;
-        var name = api.deviceName;
-        var cType = api.connectionType;
-        var winName = api.winName;
-        var winWidth = api.winWidth;
-        var winHeight = api.winHeight;
-        var frameName = api.frameName || '';
-        var frameWidth = api.frameWidth || '';
-        var frameHeight = api.frameHeight || '';
+apiready = function() {
 
-        var str = '<ul>';
-        str += '<li>引擎版本信息: ' + ver + '</li>';
-        str += '<li>系统类型: ' + sType + '</li>';
-        str += '<li>系统版本: ' + sVer + '</li>';
-        str += '<li>设备标识: ' + id + '</li>';
-        str += '<li>设备型号: ' + model + '</li>';
-        str += '<li>设备名称: ' + name + '</li>';
-        str += '<li>网络状态: ' + cType + '</li>';
-        str += '<li>主窗口名字: ' + winName + '</li>';
-        str += '<li>主窗口宽度: ' + winWidth + '</li>';
-        str += '<li>主窗口高度: ' + winHeight + '</li>';
-        str += '<li>子窗口名字: ' + frameName + '</li>';
-        str += '<li>子窗口宽度: ' + frameWidth + '</li>';
-        str += '<li>子窗口高度: ' + frameHeight + '</li>';
-        str += '</ul>';
+    // 初始化事件监听
+    initEventListenner();
 
-        $api.byId('sys-info').innerHTML = str;
+    // 获取当前的位置信息
+    initLocation();
 
-    };
+    var header = $api.byId('header');
+    var nav = $api.byId('nav');
+
+    // 实现沉浸式状态栏效果
+    $api.fixStatusBar(header);
+
+    // 计算header和nav元素的高度
+    headerH = $api.offset(header).h;
+    navH = $api.offset(nav).h;
+
+    // 获取所有的分类菜单
+    menus = $api.domAll(nav, '.menu');
+
+    // 从缓存中获取上一次选择的城市信息
+    var currentCity = $api.getStorage('currentCity');
+
+    // 如果获取不到，说明还没有选择城市，打开城市选择Frame，并返回
+    if (!currentCity) {
+        fnOpenCitySelectorFrame();
+        return;
+    }
+
+    // 更新界面上显示的城市名称
+    updateCityName(currentCity.name);
+
+    // 打开首页的所有Frames
+    openFrames();
+};
+
+var framesOpened = false,
+    menus, headerH, navH, bMap, city;
+
+function updateCityName(cityName_) {
+    city = $api.byId('city');
+    city.innerHTML = cityName_
+}
+
+function resetArrowState() {
+    var arrow = $api.byId('arrow');
+    if ($api.hasCls(arrow, 'active')) {
+        $api.removeCls(arrow, 'active');
+    }
+}
+
+function setArrowStateActive() {
+    var arrow = $api.byId('arrow');
+    if (!$api.hasCls(arrow, 'active')) {
+        $api.addCls(arrow, 'active');
+    }
+}
+
+// 初始化事件监听
+function initEventListenner() {
+    // 监听城市切换事件（自定义事件）
+    api.addEventListener({
+        name: 'cityChange'
+    }, function(ret, err) {
+        if (ret) {
+            // 更新城市名称
+            updateCityName(ret.value.currentCity.name);
+
+            // 更新箭头状态
+            resetArrowState();
+
+            // 打开商品列表等首页的Frames
+            openFrames();
+        }
+    });
+
+    // 拦截Android的返回键，在首页点击返回键，提示退出应用
+    api.addEventListener({
+        name: 'keyback'
+    }, function(ret, err) {
+        api.confirm({
+            title: '提示',
+            msg: '是否退出应用',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                // 关闭当前的主Widget，就可以实现推出APP的效果
+                api.closeWidget({
+                    silent: true //直接退出，无需提示
+                });
+            }
+        });
+    });
+}
+
+function initLocation() {
+    // 加载百度地图模块
+    bMap = api.require('bMap');
+
+    // 获取当前经纬度
+    bMap.getLocation({
+        accuracy: '1000m', // 定位所在城市信息，不需要精准定位
+        autoStop: true, // 定位到经纬度后，立即自动停止定位服务
+        filter: 100000 // 基本无需处理位置更新的情况
+    }, function(ret, err) {
+        if (ret.status) {
+            // 根据经纬度获得城市名称
+            fnGetCityNameFromLocation(ret);
+        } else {
+            alert(err.code);
+        }
+    });
+}
+
+// 根据经纬度获得城市名称
+function fnGetCityNameFromLocation(location_) {
+    bMap.getNameFromCoords({
+        lon: location_.lon,
+        lat: location_.lat
+    }, function(ret, err) {
+        if (ret.status) {
+            // 判断当前所在的城市与上一次选择的城市是否一致
+            fnCheckCityChange(ret.city);
+        }
+    });
+}
+
+// 判断当前所在的城市与上一次选择的城市是否一致，不一致则打开城市选择Frame
+function fnCheckCityChange(cityName_) {
+    if (!city) {
+        return;
+    }
+    if (city.innerHTML != cityName_) {
+        fnOpenCitySelectorFrame();
+    }
+}
+
+// 打开城市选择Frame
+function fnOpenCitySelectorFrame() {
+    // 设置箭头状态
+    setArrowStateActive();
+
+    // 根据UI架构设计（ui-architecture.xmind），打开城市选择Frame
+    api.openFrame({
+        name: 'cityselector_frame',
+        url: './cityselector_frame.html',
+        bgColor: 'rgba(0, 0, 0, 0.8)',
+        rect: {
+            x: 0,
+            y: headerH,
+            w: 'auto', // 自动填充所在Window的宽度
+            h: 'auto' // 自动填充所在Window的高度
+        },
+        bounces: true // 打开弹动
+    });
+}
+
+// 打开商品列表FrameGroup和mini购物车Frame
+function openFrames() {
+
+    // 判断这些Frame是否已经打开
+    if (framesOpened) {
+        return;
+    }
+
+    // 构造FrameGroup中的Frame数组
+    var frames = [];
+    for (var i = 0; i < menus.length; i++) {
+        frames.push({
+            name: 'main_frame_' + i,
+            url: './main_frame.html',
+            pageParam: {
+                wareTypeIndex: i
+            }
+        });
+    }
+
+    // 打开FrameGroup
+    api.openFrameGroup({
+        name: 'mainFrameGroup',
+        scrollEnabled: true, // 支持手势滑动切换
+        rect: {
+            x: 0,
+            y: headerH + navH,
+            w: 'auto', // 自动填充所在Window的宽度
+            h: 'auto' // 自动填充所在Window的高度
+        },
+        index: 0, // 默认显示第一个Frame
+        frames: frames,
+        preload: frames.length // 预加载所有Frame
+    }, function(ret, err) {
+        // Frame切换完成的响应函数，更新分类菜单的选中状态
+        fnSetNavMenuSelected(ret.index);
+    });
+
+    // 打开mini购物车Frame
+    api.openFrame({
+        name: 'minicart_frame',
+        url: './minicart_frame.html',
+        rect: {
+            x: 0,
+            y: api.winHeight - 55,
+            w: 150,
+            h: 34
+        },
+        bounces: false // 关闭弹动
+    });
+
+    // 将mini购物车Frame放置在首页Window所有Frame的最上层
+    api.bringFrameToFront({
+        from: 'minicart_frame'
+    });
+
+    // 标记为已经打开
+    framesOpened = true;
+}
+
+// 分类菜单点击的响应函数，切换Frame
+function fnSetNavMenuIndex(index_) {
+    // 首先更新菜单选中状态
+    fnSetNavMenuSelected(index_);
+
+    // 切换FrameGroup中的当前Frame
+    api.setFrameGroupIndex({
+        name: 'mainFrameGroup',
+        index: index_,
+        scroll: true
+    });
+}
+
+// 更新分类菜单的选中状态
+function fnSetNavMenuSelected(index_) {
+    for (var i = 0; i < menus.length; i++) {
+        if (index_ == i) {
+            $api.addCls(menus[i], 'selected');
+        } else {
+            $api.removeCls(menus[i], 'selected');
+        }
+    }
+}
+
+// 根据UI架构设计（ui-architecture.xmind），打开个人中心Window
+function fnOpenPersonalCenterWin() {
+    // 从缓存中获取用户信息
+    var userInfo = $api.getStorage('userInfo');
+
+    // 判断当前用户是否登录了
+    if (userInfo && userInfo.id) {
+        // 登录成功，打开个人中心Window
+        api.openWin({
+            name: 'personalcenter',
+            url: './personalcenter.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    } else {
+        // 没有登录，打开登录Window
+        api.openWin({
+            name: 'login',
+            url: './login.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+}
 </script>
 
 </html>

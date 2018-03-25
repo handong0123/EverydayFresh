@@ -1,31 +1,41 @@
- <widget id="A6076402477502"  version="0.0.1">
-    <name>EverydayFresh</name>
-    <description>
-        Example For APICloud.
-    </description>
-    <author email="developer@apicloud.com" href="http://www.apicloud.com">
-        Developer
-    </author>
-    <content src="index.html" />
-    <access origin="*" />
-    <preference name="pageBounce" value="false"/>
-	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
-	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
-	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
-	<preference name="hScrollBarEnabled" value="false"/>
-	<preference name="vScrollBarEnabled" value="false"/>
-	<preference name="autoLaunch" value="true"/>
-	<preference name="fullScreen" value="false"/>
-	<preference name="autoUpdate" value="true" />
-	<preference name="smartUpdate" value="false" />
-	<preference name="debug" value="true"/>
-	<preference name="statusBarAppearance" value="true"/>
-	<permission name="readPhoneState" />
-	<permission name="camera" />
-	<permission name="record" />
-	<permission name="location" />
-	<permission name="fileSystem" />
-	<permission name="internet" />
-	<permission name="bootCompleted" />
-	<permission name="hardware" />
-</widget>
+<widget id="A6075373169499" version="0.0.1">
+    <name>每日鲜</name>
+    <description>
+        农产品直销.
+    </description>
+    <author email="455808519@qq.com" href="http://www.apicloud.com">
+        broad
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="pageBounce" value="false" />
+    <preference name="appBackground" value="rgba(0,0,0,0.0)" />
+    <preference name="windowBackground" value="rgba(0,0,0,0.0)" />
+    <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)" />
+    <preference name="hScrollBarEnabled" value="true" />
+    <preference name="vScrollBarEnabled" value="true" />
+    <preference name="autoLaunch" value="true" />
+    <preference name="fullScreen" value="false" />
+    <preference name="autoUpdate" value="true" />
+    <preference name="smartUpdate" value="true" />
+    <preference name="debug" value="true" />
+    <preference name="statusBarAppearance" value="true" />
+    <preference name="softInputBarEnabled" value="false" />
+    <permission name="readPhoneState" />
+    <permission name="camera" />
+    <permission name="record" />
+    <permission name="location" />
+    <permission name="fileSystem" />
+    <permission name="internet" />
+    <permission name="bootCompleted" />
+    <permission name="hardware" />
+    <feature name="bMap">
+        <param name="android_api_key" value="7L5sswRBwYDkmguLgUVQtvvHxZgmWGcT" />
+        <param name="ios_api_key" value="K434zVo5NxBPeZvbnE6k6vrlnY2mKguG" />
+    </feature>
+    <feature name="pushGeTui">
+        <param name="android_appkey" value="ZABeFMlUZ6960VOZHwz0X9" />
+        <param name="android_appid" value="B8jCjExBnV8Lv3NQtjCPf5" />
+        <param name="android_appsecret" value="rRsoH0VoD58VthDJ8715i7" />
+    </feature>
+</widget>

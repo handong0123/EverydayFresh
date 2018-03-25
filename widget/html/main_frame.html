@@ -1,0 +1,606 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style type="text/css">
+    header {
+        width: 100%;
+        height: 130px;
+        box-sizing: border-box;
+        padding: 4px 10px;
+    }
+
+    header .banner {
+        width: 100%;
+        height: 100%;
+    }
+
+    section {
+        position: relative;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        padding: 0 8px;
+    }
+
+    .ware-0 {
+        position: relative;
+        width: 100%;
+        height: 177px;
+        box-sizing: border-box;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .ware-0 .thumbnail {
+        height: 130px;
+        width: 100%;
+    }
+
+    .ware-0 .info {
+        width: 100%;
+        box-sizing: border-box;
+        height: 35px;
+        line-height: 35px;
+        padding-left: 6px;
+        border-bottom: 1px solid #d1d1d1;
+    }
+
+    .ware-0 .info .price {
+        font-size: 14px;
+        color: #e3007f;
+    }
+
+    .ware-0 .info .unit {
+        font-size: 13px;
+        color: #767676;
+    }
+
+    .ware-0 .info .origin-price {
+        font-size: 11px;
+        color: #c0c0c0;
+    }
+
+    .ware-1 {
+        position: relative;
+        width: 100%;
+        height: 145px;
+        box-sizing: border-box;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #d1d1d1;
+    }
+
+    .ware-1 .thumbnail {
+        position: absolute;
+        top: 20px;
+        left: 0px;
+        height: 100px;
+        width: 100px;
+    }
+
+    .ware-1 .info {
+        width: 100%;
+        height: 114px;
+        box-sizing: border-box;
+        padding-left: 112px;
+        padding-right: 28px;
+    }
+
+    .ware-1 .info .name {
+        width: 100%;
+        height: 15px;
+        color: #555555;
+        margin-top: 14px;
+        font-size: 15px;
+    }
+
+    .ware-1 .info .description {
+        margin-top: 10px;
+        width: 100%;
+        height: 13px;
+        font-size: 13px;
+        color: #9d9d9d;
+    }
+
+    .ware-1 .info .price-tag {
+        margin-top: 10px;
+        width: 100%;
+        height: 12px;
+        font-size: 12px;
+        vertical-align: top;
+    }
+
+    .ware-1 .info .price-tag .price {
+        color: #e3007f;
+    }
+
+    .ware-1 .info .price-tag .unit {
+        font-size: 8px;
+        color: #cbcbcb;
+    }
+
+    .ware-1 .info .origin-price {
+        margin-top: 5px;
+        width: 100%;
+        height: 10px;
+        font-size: 10px;
+        color: #d3d3d3;
+    }
+
+    .ware .control {
+        position: absolute;
+        width: 110px;
+        height: 23px;
+        right: 8px;
+    }
+
+    .ware-0 .control {
+        bottom: 8px;
+    }
+
+    .ware-1 .control {
+        top: 90px;
+    }
+
+    .ware .control .panel {
+        display: none;
+        height: 23px;
+    }
+
+    .ware .control .minus {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 23px;
+        height: 23px;
+        z-index: 2;
+    }
+
+    .ware .control .count {
+        position: relative;
+        top: 0;
+        margin-left: 31px;
+        margin-right: 31px;
+        width: auto;
+        height: 23px;
+        text-align: center;
+        line-height: 23px;
+        color: #444;
+        font-size: 12px;
+        background-image: url(../image/count.png);
+        background-repeat: no-repeat;
+        background-size: 48px 23px;
+    }
+
+    .ware .control .add {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 23px;
+        height: 23px;
+        z-index: 2;
+    }
+
+    .push-status {
+        width: 100%;
+        height: 40px;
+        font-size: 16px;
+        color: #888;
+        line-height: 40px;
+        text-align: center;
+        background-color: #fff;
+    }
+
+    .active {
+        opacity: 0.7;
+    }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <img id="banner" class="banner" src="../image/default_rect.png">
+    </header>
+    <section id="list">
+        <!-- <div class="ware ware-0">
+            <div class="content">
+                <img class="thumbnail" src="../image/default_rect.png">
+                <div class="info">
+                    <span class="price">RMB14.9</span>
+                    <span class="unit">/4盒</span>
+                    <span class="origin-price">&nbsp;原价:<del>19.9元</del></span>
+                </div>
+                <div class="control">
+                    <div class="panel">
+                        <img class="minus" src="../image/minus.png">
+                        <div class="count">0</div>
+                    </div>
+                    <img class="add" src="../image/add.png">
+                </div>
+            </div>
+        </div>
+        <div class="ware ware-1">
+            <div class="content" tapmode onclick="fnOpenWareWin();">
+                <img class="thumbnail" src="../image/default_square.png">
+                <div class="info">
+                    <div class="name">牛奶巧克力</div>
+                    <div class="description">下雨天更配哦</div>
+                    <div class="price-tag">
+                        <span class="price">￥28.9</span>
+                        <span class="unit">/1盒</span>
+                    </div>
+                    <div class="origin-price">原价:
+                        <del>59.9元</del>
+                    </div>
+                </div>
+                <div class="control">
+                    <div class="panel">
+                        <img class="minus" src="../image/minus.png">
+                        <div class="count">0</div>
+                    </div>
+                    <img class="add" src="../image/add.png ">
+                </div>
+            </div>
+        </div> -->
+    </section>
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
+</body>
+<script type="text/template" id="template">
+    {{~it:value:index}} {{?0 == value.showType}}
+    <div class="ware ware-0">
+        <div class="content" tapmode onclick="fnOpenWareWin('{{=value.id}}');">
+            <img onload="fnLoadImage(this)" data-url="{{=value.thumbnail.url}}" class="thumbnail" src="../image/default_rect.png">
+            <div class="info">
+                <span class="price">{{=value.price}}</span>
+                <span class="unit">/{{=value.unit}}</span>
+                <span class="origin-price">&nbsp;原价 :<del>{{=value.originPrice}}元</del></span>
+            </div>
+            <div class="control">
+                <div class="panel" id="panel_{{=value.id}}">
+                    <img class="minus" src="../image/minus.png" tapmode onclick="fnMinus('{{=value.id}}');">
+                    <div class="count" id="count_{{=value.id}}">0</div>
+                </div>
+                <img class="add" src="../image/add.png" tapmode onclick="fnAdd('{{=value.id}}');">
+            </div>
+        </div>
+    </div>
+    {{??}}
+    <div class="ware ware-1">
+        <div class="content" tapmode onclick="fnOpenWareWin('{{=value.id}}');">
+            <img onload="fnLoadImage(this)" data-url="{{=value.thumbnail.url}}" class="thumbnail" src="../image/default_square.png">
+            <div class="info">
+                <div class="name">{{=value.name}}</div>
+                <div class="description">{{=value.description}}</div>
+                <div class="price-tag">
+                    <span class="price">￥{{=value.price}}</span>
+                    <span class="unit">/{{=value.unit}}</span>
+                </div>
+                <div class="origin-price">原价:
+                    <del>{{=value.originPrice}}元</del>
+                </div>
+            </div>
+            <div class="control">
+                <div class="panel" id="panel_{{=value.id}}">
+                    <img class="minus" src="../image/minus.png" tapmode onclick="fnMinus('{{=value.id}}');">
+                    <div class="count" id="count_{{=value.id}}">0</div>
+                </div>
+                <img class="add" src="../image/add.png" tapmode onclick="fnAdd('{{=value.id}}');">
+            </div>
+        </div>
+    </div>
+    {{?}} {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/db.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript">
+apiready = function() {
+
+    // 初始化一下默认数据
+    init();
+
+    // 初始化事件监听
+    initEventListenter();
+
+    // 初始化下拉刷新
+    initRefresh();
+
+    // 更新商品Banner
+    updateBanner();
+
+    // 获取商品列表
+    fnGetWareList(false);
+};
+
+var currentCity, wareTypeList, skip = 0,
+    LIMIT = 5;
+
+function init() {
+    // 从缓存中获得城市信息
+    currentCity = $api.getStorage('currentCity');
+
+    // 从缓存中获得商品分类列表
+    wareTypeList = $api.getStorage('wareTypeList');
+}
+
+function initEventListenter() {
+
+    // 监听滚动到Frame底部的事件
+    api.addEventListener({
+        name: 'scrolltobottom',
+        extra: {
+            threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+        }
+    }, function(ret, err) {
+        // 获取更多的商品
+        fnGetWareList(true);
+    });
+
+    // 监听城市切换事件(自定义事件)，重新加载商品列表
+    api.addEventListener({
+        name: 'cityChange'
+    }, function(ret, err) {
+        if (ret) {
+            if (ret.value) {
+                // 更新当前城市信息
+                currentCity = ret.value.currentCity;
+                // 更新商品列表
+                fnGetWareList(false);
+            }
+        }
+    });
+
+    // 监听购物车更新事件(自定义事件)，同步更新列表展示中选定商品的数量
+    api.addEventListener({
+        name: 'updateShoppingCart'
+    }, function(ret, err) {
+        if (ret) {
+            if (ret.value) {
+                // 获取相应商品元素的信息
+                var count = $api.byId('count_' + ret.value.wareId);
+                var panel = $api.byId('panel_' + ret.value.wareId);
+                if (count && panel) {
+                    // 更新商品数量及显示状态
+                    count.innerHTML = ret.value.wareCount;
+                    panel.style.display = (ret.value.wareCount > 0) ? 'block' : 'none';
+                }
+            }
+        }
+    });
+}
+
+// 实现下拉刷新功能
+function initRefresh() {
+    api.setRefreshHeaderInfo({
+        visible: true,
+        loadingImg: 'widget://image/refresh.png',
+        bgColor: '#fff',
+        textColor: '#e1017e',
+        showTime: true
+    }, function(ret, err) {
+        // 刷新商品列表
+        fnGetWareList(false);
+    });
+}
+
+// 打开商品详情Window，指定商品Id
+function fnOpenWareWin(wareId_) {
+
+    // 当点击修改商品数量按钮的时候，并不去打开商品详情窗口
+    if (event.target.className == 'minus' || event.target.className == 'add') {
+        return;
+    }
+
+    // 获取指定商品在购物车中的数量
+    var count = $api.byId('count_' + wareId_);
+    var wareCount = parseInt(count.innerHTML);
+    api.openWin({
+        name: 'ware',
+        url: './ware.html',
+        pageParam: {
+            wareId: wareId_,
+            wareCount: wareCount
+        },
+        animation: {
+            type: "fade"
+        }
+    });
+}
+
+// 更新商品Banner
+function updateBanner() {
+    var banner = $api.byId('banner');
+    // 实现Banner的图片缓存
+    api.imageCache({
+        url: wareTypeList[api.pageParam.wareTypeIndex].banner.url
+    }, function(ret, err) {
+        if (ret) {
+            if (ret && ret.status) {
+                banner.src = ret.url;
+            }
+        }
+    });
+}
+
+// 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
+function fnGetWareList(loadMore_) {
+    var now = Date.now();
+    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
+    if (!loadMore_) {
+        // 显示加载状态对话框
+        api.showProgress({
+            style: 'default',
+            animationType: 'fade',
+            title: '努力加载中...',
+            text: '请稍后...',
+            modal: false
+        });
+    }
+
+    // 如果是加载更多，需要实现分页
+    if (loadMore_) {
+        skip += LIMIT;
+    } else {
+        skip = 0;
+    }
+
+    // 根据城市和商品分类获得相应的商品列表
+    var params = {
+        fields: {},
+        where: {
+            supportAreaId: currentCity.id,
+            wareTypeId: wareTypeList[api.pageParam.wareTypeIndex].id
+        },
+        skip: skip,
+        limit: LIMIT
+    }
+    params = $api.jsonToStr(params);
+    api.ajax({
+        url: 'http://d.apicloud.com/mcm/api/ware?filter=' + params,
+        method: 'get',
+        headers: {
+            "X-APICloud-AppId": "A6075373169499",
+            "X-APICloud-AppKey": appKey
+        }
+    }, function(ret, err) {
+        if (ret) {
+            // 恢复下拉刷新的状态
+            api.refreshHeaderLoadDone();
+
+            // 在界面中更新商品列表显示
+            fnUpdateWareList(ret, loadMore_);
+        } else {
+            api.toast({
+                msg: '加载数据失败',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+
+        // 隐藏加载状态对话框
+        api.hideProgress();
+    });
+}
+
+// 实现商品列表的图片缓存
+function fnLoadImage(ele_) {
+    var dataUrl = $api.attr(ele_, 'data-url');
+
+    // 缓存data-url所指定的图片
+    if (dataUrl) {
+        api.imageCache({
+            url: dataUrl
+        }, function(ret, err) {
+            if (ret) {
+                ele_.src = ret.url;
+                $api.attr(ele_, 'data-url', '');
+            }
+        });
+    }
+}
+
+// 更新商品列表显示
+function fnUpdateWareList(data_, loadMore_) {
+
+    var list = $api.byId('list');
+
+    // 编译模板函数
+    var tempFn = doT.template($api.byId('template').innerHTML);
+
+    // 使用模板函数生成HTML文本
+    var resultHTML = tempFn(data_);
+
+    // 判断是否是加载更多，如果是加载更多，则追加到list中
+    if (loadMore_) {
+        $api.append(list, resultHTML);
+        // 如果服务器端已经没有更多数据返回，更新提示信息
+        if (data_.length < LIMIT) {
+            var pushStatus = $api.byId('pushStatus');
+            pushStatus.innerHTML = "我可是有底线的";
+        }
+    } else {
+        // 否则，直接替换list中的内容
+        $api.html(list, resultHTML);
+        updateBanner();
+    }
+
+    // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+    api.parseTapmode();
+
+    // 如果商品已存在购物成中，显示商品在购物成中的数量
+    fnShowWareCountInShoppingCart(data_);
+}
+
+// 添加到购物车按钮的监听函数
+function fnAdd(wareId_) {
+
+    // 阻止事件继续向上冒泡
+    event.stopPropagation();
+
+    var count = $api.byId('count_' + wareId_);
+    var panel = $api.byId('panel_' + wareId_);
+
+    // 更新商品数量及显示状态
+    var countNumber = parseInt(count.innerHTML);
+    countNumber += 1;
+    count.innerHTML = countNumber;
+    panel.style.display = (countNumber > 0) ? 'block' : 'none';
+
+    // 发送购物车更新自定义事件，传递商品Id和商品数量
+    api.sendEvent({
+        name: 'updateShoppingCart',
+        extra: {
+            wareId: wareId_,
+            wareCount: countNumber
+        }
+    });
+}
+
+// 从购物车删除按钮的监听函数
+function fnMinus(wareId_) {
+    event.stopPropagation();
+    var count = $api.byId('count_' + wareId_);
+    var panel = $api.byId('panel_' + wareId_);
+    var countNumber = parseInt(count.innerHTML);
+    countNumber -= 1;
+    count.innerHTML = countNumber;
+    panel.style.display = (countNumber > 0) ? 'block' : 'none';
+    api.sendEvent({
+        name: 'updateShoppingCart',
+        extra: {
+            wareId: wareId_,
+            wareCount: countNumber
+        }
+    });
+}
+
+// 显示商品在购物车中的数量
+function fnShowWareCountInShoppingCart(data_) {
+    // 遍历商品列表
+    for (var i = 0; i < data_.length; i++) {
+        var result = $db.select(data_[i].id);
+        if (result && result.data.length > 0) {
+            // 获得商品在购物车中的数量，更新数量和状态
+            var wareCount = result.data[0].wareCount;
+            var count = $api.byId('count_' + data_[i].id);
+            var panel = $api.byId('panel_' + data_[i].id);
+            count.innerHTML = wareCount;
+            panel.style.display = (wareCount > 0) ? 'block' : 'none';
+        }
+    }
+}
+</script>
+
+</html>
