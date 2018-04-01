@@ -1,0 +1,9 @@
+Weekly:4
+Date:4.1
+Kind:Weekly summaryl
+content:
+1.Art Designer making materials of the app
+2.Complete system architecture design
+3.Complete database design
+4.Complete requirement analysis
+5.Upload project demo

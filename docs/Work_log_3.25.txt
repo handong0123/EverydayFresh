@@ -1,0 +1,7 @@
+Weekly:3
+Date:3.25
+Kind:Weekly summaryl
+content:
+1.Determine the name of the project
+2.Determining the division of labor of the members
+3.Finish feasibility analysis
