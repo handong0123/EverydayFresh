@@ -1,3 +1,23 @@
+Weekly:6
+Date:4.15
+Kind:Weekly summaryl
+content:
+1.Completing the function of shopping cart
+2.Completing the function of personal center
+3.Perfect requirement analysis
+
+
+Weekly:5
+Date:4.8
+Kind:Weekly summaryl
+content:
+1.Completing the function of login and registration 
+2.Completing the function of city switching
+3.Completing the function of classified navigation of goods
+4.Finish requirement analysis
+
+
+
 Weekly:4
 Date:4.1
 Kind:Weekly summaryl
