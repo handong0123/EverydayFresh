@@ -187,8 +187,6 @@ function fnInitUIInput() {
 
 // 登录
 function fnLogin() {
-    var now = Date.now();
-    var appKey = SHA1("A6075373169499"+"UZ"+"BFFE7BEC-8DB0-F919-55B6-2502936C4B87"+"UZ"+now)+"."+now;
     if (!usernameValue) {
         if (api.systemType == 'android') {
             setTimeout(function() {
@@ -222,8 +220,8 @@ function fnLogin() {
         url: 'http://d.apicloud.com/mcm/api/user/login',
         method: 'post',
         headers: {
-            "X-APICloud-AppId": "A6075373169499",
-            "X-APICloud-AppKey": appKey
+            "X-APICloud-AppId": "A6921544633372",
+            "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476"
         },
         data: {
             values: {
