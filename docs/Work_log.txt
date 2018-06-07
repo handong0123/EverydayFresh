@@ -1,3 +1,14 @@
+Weekly:14
+Date:6.7
+Kind:Weekly summaryl
+content:
+1.Completing the function of the order
+2.Completing the function of the account
+3.Complete the functions of sharing
+4.Complete the function of coupons
+
+
+
 Weekly:6
 Date:4.15
 Kind:Weekly summaryl
